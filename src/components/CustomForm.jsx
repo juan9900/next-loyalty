@@ -5,6 +5,7 @@ import PhoneInput from "./PhoneInput";
 import { useFlagStore } from "../stores/flagStore";
 import { useCardStore } from "../stores/cardStore";
 import enrollProcess from "../utils/enrollProcess";
+import useUserSubscription from "@/hooks/useUserSuscription";
 
 export default function CustomForm({
   terms,
@@ -19,6 +20,7 @@ export default function CustomForm({
 }) {
   const [termsAccepted, setTermsAccepted] = useState("true");
   const flag = useFlagStore((state) => state);
+  const { subscribe, isLoading, error } = useUserSubscription();
 
   const {
     register,
@@ -28,9 +30,9 @@ export default function CustomForm({
 
   const onSubmit = async (data) => {
     data.phone = `${flag.code}${data.phone}`;
-    const resp = await enrollProcess(
-      hookEnroll,
+    await subscribe(
       hookCheck,
+      hookEnroll,
       data.name,
       data.email,
       data.phone,
@@ -39,7 +41,6 @@ export default function CustomForm({
       apiKey,
       marca
     );
-    console.log(resp);
   };
   return (
     <div className="w-2/5">

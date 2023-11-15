@@ -1,7 +1,7 @@
 import { useCardStore } from "@/stores/cardStore";
 import getEnv from "./getEnv";
 
-export default function enrollProcess(
+export default async function enrollProcess(
   hookEnroll,
   hookCheck,
   name,
@@ -20,39 +20,45 @@ export default function enrollProcess(
     },
     dataConsentOptIn: true,
   };
-  callWebhook(hookCheck, payload)
-    .then((data) => {
-      const isRegistered = data.data.isRegistered;
-      console.log({ isRegistered });
-      if (isRegistered) {
-        return {
-          ok: false,
-          error:
-            "El número telefónico o correo electrónico ya se encuentra registrado",
-        };
-      } else {
-        console.log("not registered");
-        enrollUser("/api/enroll?", payload, apiKey, cardId, marca).then(
-          (response) => {
-            if (response.error?.includes("is not valid")) {
-              return;
-            }
-            const { pid, url: cardLink } = response.data;
-            const hookPayload = { ...payload, pid, cardLink };
-            callWebhook(hookEnroll, hookPayload).then((response) => {
-              if (!response.ok) {
-                return;
-              }
+  try {
+    const responseCheck = callWebhook(hookCheck, payload);
+    const { isRegistered } = responseCheck.data;
+    if (isRegistered) {
+      return {
+        ok: false,
+        error:
+          "El número telefónico o correo electrónico ya se encuentra registrado",
+      };
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  // if (isRegistered) {
+  //   return {
+  //     ok: false,
+  //     error:
+  //       "El número telefónico o correo electrónico ya se encuentra registrado",
+  //   };
+  // } else {
+  //   console.log("not registered");
+  //   enrollUser("/api/enroll?", payload, apiKey, cardId, marca).then(
+  //     (response) => {
+  //       if (response.error?.includes("is not valid")) {
+  //         return;
+  //       }
+  //       const { pid, url: cardLink } = response.data;
+  //       const hookPayload = { ...payload, pid, cardLink };
+  //       callWebhook(hookEnroll, hookPayload).then((response) => {
+  //         if (!response.ok) {
+  //           return;
+  //         }
 
-              console.log(response);
-            });
-          }
-        );
-      }
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+  //         console.log(response);
+  //       });
+  //     }
+  //   );
+  // }
+  // });
 }
 
 async function callWebhook(url, payload = {}) {

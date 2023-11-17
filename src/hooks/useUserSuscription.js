@@ -7,9 +7,7 @@ const useUserSubscription = () => {
   const subscribe = async (
     urlCheck,
     urlEnroll,
-    name,
-    email,
-    phone,
+    payload,
     cardId,
     username,
     apiKey,
@@ -19,7 +17,7 @@ const useUserSubscription = () => {
     setError(null);
 
     try {
-      const userExists = await callWebhook(urlCheck, name, email, phone);
+      const userExists = await callWebhook(urlCheck, payload);
 
       // if (!userExists) {
       //   await enrollUser(name, email, phone, cardId, username, apiKey, marca);

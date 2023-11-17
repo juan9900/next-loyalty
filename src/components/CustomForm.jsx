@@ -30,12 +30,17 @@ export default function CustomForm({
 
   const onSubmit = async (data) => {
     data.phone = `${flag.code}${data.phone}`;
+    const payload = {
+      customerData: {
+        Nombre: data.name,
+        "Número telefónico": data.phone,
+        "Correo electrónico": data.email,
+      },
+    };
     await subscribe(
       hookCheck,
       hookEnroll,
-      data.name,
-      data.email,
-      data.phone,
+      payload,
       cardId,
       username,
       apiKey,

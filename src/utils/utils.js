@@ -25,7 +25,7 @@ export const callWebhook = async (url, payload = {}) => {
 export const enrollUser = async (data, key, cardId, marca) => {
   try {
     const response = await fetch(
-      LOOPY_ROUTES.enroll +
+      "/api/enroll?" +
         new URLSearchParams({
           key,
           cardId,

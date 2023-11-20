@@ -47,8 +47,12 @@ export default function CustomForm({
       marca
     );
   };
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className="w-2/5">
+      <h1>{JSON.stringify(isLoading)}</h1>
       <form
         action=""
         id="user-form"

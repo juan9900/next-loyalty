@@ -15,20 +15,51 @@ const useUserSubscription = () => {
   ) => {
     setIsLoading(true);
     setError(null);
+    console.log({
+      urlCheck,
+      urlEnroll,
+      payload,
+      cardId,
+      username,
+      apiKey,
+      marca,
+    });
 
     try {
       const userExists = await callWebhook(urlCheck, payload);
 
-      // if (!userExists) {
-      //   await enrollUser(name, email, phone, cardId, username, apiKey, marca);
-      //   await subscribeUser(name, email, phone);
-      // }
-      console.log(userExists);
-      if (userExists) {
+      // Exit the function if the user is already registered
+      if (userExists.isRegistered) {
         setError("El usuario ya existe");
+        setIsLoading(false);
+        return;
       }
+      const enroll = await enrollUser(payload, apiKey, cardId, marca);
+      console.log({ enroll });
+      console.log(`Enroll ok: ${enroll.ok}`);
+      if (!enroll.ok) {
+        setError(enroll.error);
+        setIsLoading(false);
+        return;
+      }
+      const { pid, url: cardLink } = enroll.data;
+      console.log({ pid, url });
+      const addPayload = {
+        payload,
+        pid,
+        cardLink,
+      };
+
+      const addToList = await callWebhook(urlEnroll, addPayload);
+      // if (!addToList.ok) {
+      //   setError(addToList.error);
+      //   setIsLoading(false);
+      //   return;
+      // }
+
       // setError("El usuario ya existe");
       setIsLoading(false);
+      window.location.href = check.url;
     } catch (err) {
       setError(err);
       setIsLoading(false);

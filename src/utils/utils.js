@@ -14,7 +14,6 @@ export const callWebhook = async (url, payload = {}) => {
       body: JSON.stringify(payload),
     });
     const data = await response.json();
-    console.log({ check: data });
     return { data, ok: response.ok };
   } catch (e) {
     console.log({ webhook: e });

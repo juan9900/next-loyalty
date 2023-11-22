@@ -15,53 +15,47 @@ const useUserSubscription = () => {
   ) => {
     setIsLoading(true);
     setError(null);
-    console.log({
-      urlCheck,
-      urlEnroll,
-      payload,
-      cardId,
-      username,
-      apiKey,
-      marca,
-    });
 
     try {
       const userExists = await callWebhook(urlCheck, payload);
 
       // Exit the function if the user is already registered
-      if (userExists.isRegistered) {
-        setError("El usuario ya existe");
-        setIsLoading(false);
-        return;
+      console.log(userExists.data.isRegistered);
+      if (userExists.data.isRegistered) {
+        throw new Error("El usuario ya se encuentra registrado");
       }
-      const enroll = await enrollUser(payload, apiKey, cardId, marca);
-      console.log({ enroll });
-      console.log(`Enroll ok: ${enroll.ok}`);
-      if (!enroll.ok) {
-        setError(enroll.error);
-        setIsLoading(false);
-        return;
-      }
-      const { pid, url: cardLink } = enroll.data;
-      console.log({ pid, url });
-      const addPayload = {
-        payload,
-        pid,
-        cardLink,
-      };
+      // const enroll = await enrollUser(payload, apiKey, cardId, marca);
+      // console.log({ enroll });
+      // console.log(`Enroll ok: ${enroll.ok}`);
+      // if (!enroll.ok) {
+      //   console.log("Enroll error");
+      //   setError(enroll.error);
+      //   setIsLoading(false);
+      //   return;
+      // }
 
-      const addToList = await callWebhook(urlEnroll, addPayload);
+      // const addPayload = {
+      //   ...payload,
+      //   pid: enroll.data.pid,
+      //   cardLink: enroll.data.url,
+      // };
+
+      // console.log(`urlEnroll: ${urlEnroll}`);
+      // const addToList = await callWebhook(urlEnroll, addPayload);
+      // console.log(addToList);
       // if (!addToList.ok) {
       //   setError(addToList.error);
       //   setIsLoading(false);
       //   return;
       // }
-
-      // setError("El usuario ya existe");
-      setIsLoading(false);
-      window.location.href = check.url;
-    } catch (err) {
-      setError(err);
+      // console.log(addToList);
+      // console.log(addToList.data.url);
+      // setIsLoading(false);
+      // window.location.href = `${addToList.data.url}`;
+    } catch (Error) {
+      console.log(`err: ${JSON.stringify(Error.message)}`);
+      console.log("se detecto un error");
+      setError(Error.message);
       setIsLoading(false);
     }
   };

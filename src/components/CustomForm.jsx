@@ -6,6 +6,7 @@ import { useFlagStore } from "../stores/flagStore";
 import { useCardStore } from "../stores/cardStore";
 import enrollProcess from "../utils/enrollProcess";
 import useUserSubscription from "@/hooks/useUserSuscription";
+import CustomSpinner from "./spinner";
 
 export default function CustomForm({
   terms,
@@ -47,21 +48,20 @@ export default function CustomForm({
       marca
     );
   };
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+
   return (
     <div className="w-2/5">
-      <h1>{JSON.stringify(isLoading)}</h1>
+      {error && (
+        <div className="flex bg-red-100 p-2 rounded-md mt-3">
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
       <form
         action=""
         id="user-form"
         className="needs-validation"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <p>hookEnroll:{hookEnroll}</p>
-        <p>hookCheck:{hookCheck}</p>
-        <p>Card id: {cardId}</p>
         <div className="my-5 ">
           <label
             className="form-label block mb-2 text-sm font-medium text-gray-900 dark:text-black"
@@ -203,16 +203,11 @@ export default function CustomForm({
             color: "white",
           }}
           id="submit-btn"
-          className="mb-4 btn btn-primary px-2 py-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mb-4 btn btn-primary px-2 py-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed flex flex-row items-center justify-center"
           type="submit"
-          disabled={!termsAccepted}
+          disabled={!termsAccepted || isLoading}
         >
-          <span
-            id="submit-spinner"
-            className="spinner-border spinner-border-sm d-none"
-            role="status"
-            aria-hidden="true"
-          ></span>
+          {isLoading && <CustomSpinner />}
           Enviar
         </button>
       </form>

@@ -71,7 +71,6 @@ export default function page({ params }) {
       >
         {card && card.marca}
       </h1>
-      <p>{JSON.stringify(card)}</p>
       <p style={{ color: card.secondaryColor }} className="font-bold text-2xl">
         {dataResult.description}
       </p>

@@ -14,6 +14,7 @@
     "intl-tel-input": "^18.2.1",
     "jsonwebtoken": "^9.0.2",
     "next": "13.5.6",
+    "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
     "react-flagkit": "^2.0.4",

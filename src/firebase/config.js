@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -9,7 +10,7 @@ import { initializeApp } from "firebase/app";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: "AIzaSyCy-FmL3dcKlAmer7GEuV0qrKfXG36ntAw",
 
   authDomain: "loyalty-cards-ui.firebaseapp.com",
 
@@ -24,4 +25,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+export { app, auth };
